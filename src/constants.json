@@ -1,0 +1,9 @@
+[
+    {
+        "userName" : "User Name",
+        "email" : "Email",
+        "password" : "Password",
+        "placeholderU": "Enter your user name",
+        "placeholderP" : "Enter your password"
+    }
+]

@@ -1,12 +1,13 @@
+import React from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Routing from './Components/routing/routing'
 
 function App() {
   return (
-    <div >
-      hi nevin
-      hi Hello
-      
+    <div>
+      <Routing />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
