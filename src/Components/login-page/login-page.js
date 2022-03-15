@@ -31,7 +31,7 @@ function LoginPage() {
     }
   }
   return (
-    <div>
+    <div className='login-page-div'>
       <h1 className='main-heading'>Tech Day V.17</h1>
       <Container fluid>
         <Row className='login-row'>
