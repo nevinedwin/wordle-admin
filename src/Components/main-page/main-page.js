@@ -15,7 +15,7 @@ function MainPage() {
     const [playerDetailsStatus, setPlayerDetailsStatus] = useState(false)
     const [playerDetails, setPlayerDetails] = useState(false)
     const [dateArray, setDateArray] = useState([])
-    const [word, setWord] = useState('')
+    const [todayWord, setTodayWord] = useState('')
     const [userDetails, setUserDetails] = useState({})
     const [wordleData, setWordleData] = useState({
         word: ''
@@ -52,19 +52,19 @@ function MainPage() {
         }
         else {
             if (wordleData.word.length === 5) {
-                console.log(wordleData.word)
-                setWord({ word: wordleData.word })
-                // .then(res => {
-                //     if (res.status == 200) {
-                //         toast.success('Hidden Word Updated Successfully')
-                //         setWordleData({
-                //             word: ''
-                //         })
-                //     }
-                //     else {
-                //         toast.warn('Error')
-                //     }
-                // })
+                setWord(wordleData)
+                    .then(res => {
+                        if (res.status == 200) {
+                            toast.success('Hidden Word Updated Successfully')
+                            setWordleData({
+                                word: ''
+                            })
+                        }
+                        else {
+                            toast.warn('Error')
+                        }
+                    })
+
 
             }
             else {
@@ -85,9 +85,6 @@ function MainPage() {
 
     const detailsHandler = (date) => {
         setPlayerDetails(true)
-        getWord(date).then(res=>{
-            setWord(res.data.result.word)
-        })
         playerDetailsByDay(date).then(res => {
             if (res.status === 200) {
                 setUserDetails(res.data.messages)
@@ -150,7 +147,7 @@ function MainPage() {
             }
             {
                 playerDetails ? <div>
-                    <h2>Word : {word}</h2>
+                    <h2>Word : {todayWord}</h2>
                     <Table className='main-page-table' striped bordered hover>
                         <thead>
                             <tr>
