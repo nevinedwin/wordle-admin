@@ -5,9 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { Container, Row, Col, Table } from 'react-bootstrap'
 import { Button } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
-import data from '../../data'
 import './main-page.css'
 import { allPlayerDetails, getWord, playerDetailsByDay, setWord } from '../../services/apiServices';
+import { decodeWord } from '../../utils/utils';
 
 
 function MainPage() {
@@ -25,12 +25,14 @@ function MainPage() {
     useEffect(() => {
         allPlayerDetails().then(res => {
             const details = res.data.messages
+            let detailsArray = []
             details.forEach(item => {
 
-                if (!dateArray.includes(item.date)) {
-                    setDateArray(prev => [...prev, item.date])
+                if (!detailsArray.includes(item.date)) {
+                    detailsArray.push(item.date)
                 }
             })
+            setDateArray(detailsArray)
         })
     }, [])
 
@@ -54,7 +56,7 @@ function MainPage() {
             if (wordleData.word.length === 5) {
                 setWord(wordleData)
                     .then(res => {
-                        if (res.status == 200) {
+                        if (res.status === 200) {
                             toast.success('Hidden Word Updated Successfully')
                             setWordleData({
                                 word: ''
@@ -85,6 +87,10 @@ function MainPage() {
 
     const detailsHandler = (date) => {
         setPlayerDetails(true)
+        getWord(date).then(res=>{
+            const decodedWord = decodeWord(res.data.result).toUpperCase()
+            setTodayWord(decodedWord)
+        })
         playerDetailsByDay(date).then(res => {
             if (res.status === 200) {
                 setUserDetails(res.data.messages)
@@ -135,10 +141,10 @@ function MainPage() {
                 playerDetailsStatus ? <div className='button-div'>
                     {
                         dateArray.map((today, index) => {
-
                             return (
-                                <Button key={today} className='close-button' type='submit' size='lg' variant='success' onClick={() => detailsHandler(today)}>Day {index + 1} - {today.slice(8, 11)}</Button>
+                                <Button key={today} className='close-button' type='submit' size='lg' variant='success' onClick={() => detailsHandler(today)}>Day {index + 1} - {today.slice(2, 4)}</Button>
                             )
+
                         })
                     }
                     <Button className='close-button' type='submit' size='lg' variant='success' onClick={closeHandler}>Close</Button>
@@ -147,14 +153,13 @@ function MainPage() {
             }
             {
                 playerDetails ? <div>
-                    <h2>Word : {todayWord}</h2>
+                    <h2 className='hidden-word'>Word : {todayWord}</h2>
                     <Table className='main-page-table' striped bordered hover>
                         <thead>
                             <tr>
                                 <th>Email</th>
                                 <th>Attempt</th>
                                 <th>Time</th>
-                                <th>Score</th>
                                 <th>Game Status</th>
                             </tr>
                         </thead>
@@ -162,11 +167,10 @@ function MainPage() {
                             {
                                 userDetails.length > 0 && userDetails.map(item => {
                                     return (
-                                        <tr key={item.email}>
+                                        <tr className={item.gameStatus === 'Win' ? 'green' : ''} key={item.email}>
                                             <td>{item.email}</td>
                                             <td>{item.attempt}</td>
                                             <td>{item.time}</td>
-                                            <td>{item.score}</td>
                                             <td>{item.gameStatus}</td>
                                         </tr>
                                     )
