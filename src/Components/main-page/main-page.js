@@ -20,6 +20,7 @@ function MainPage() {
     const [wordleData, setWordleData] = useState({
         word: ''
     })
+    const [search, setSearch] = useState('')
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -87,7 +88,7 @@ function MainPage() {
 
     const detailsHandler = (date) => {
         setPlayerDetails(true)
-        getWord(date).then(res=>{
+        getWord(date).then(res => {
             const decodedWord = decodeWord(res.data.result).toUpperCase()
             setTodayWord(decodedWord)
         })
@@ -153,10 +154,14 @@ function MainPage() {
             }
             {
                 playerDetails ? <div>
-                    <h2 className='hidden-word'>Word : {todayWord}</h2>
+                    <div className='word-head'>
+                        <h2 className='hidden-word'>Word : {todayWord}</h2>
+                        <input type='text' placeholder='search' value={search} onChange={(event) => setSearch(event.target.value)}></input>
+                    </div>
                     <Table className='main-page-table' striped bordered hover>
                         <thead>
                             <tr>
+                                <th>SL No</th>
                                 <th>Email</th>
                                 <th>Attempt</th>
                                 <th>Time</th>
@@ -165,15 +170,40 @@ function MainPage() {
                         </thead>
                         <tbody>
                             {
-                                userDetails.length > 0 && userDetails.map(item => {
-                                    return (
-                                        <tr className={item.gameStatus === 'Win' ? 'green' : ''} key={item.email}>
-                                            <td>{item.email}</td>
-                                            <td>{item.attempt}</td>
-                                            <td>{item.time}</td>
-                                            <td>{item.gameStatus}</td>
-                                        </tr>
-                                    )
+                                userDetails.length > 0 && userDetails.map((item, index) => {
+                                    if (search === item.gameStatus) {
+                                        return (
+                                            <tr className={item.gameStatus === 'Win' ? 'green' : ''} key={item.email}>
+                                                <td>{index + 1}</td>
+                                                <td>{item.email}</td>
+                                                <td>{item.attempt}</td>
+                                                <td>{item.time}</td>
+                                                <td>{item.gameStatus}</td>
+                                            </tr>
+                                        )
+                                    }
+                                    else if(item.email === search.toLowerCase()){
+                                        return (
+                                            <tr className={item.gameStatus === 'Win' ? 'green' : ''} key={item.email}>
+                                                <td>{index + 1}</td>
+                                                <td>{item.email}</td>
+                                                <td>{item.attempt}</td>
+                                                <td>{item.time}</td>
+                                                <td>{item.gameStatus}</td>
+                                            </tr>
+                                        )
+                                    }
+                                    if(search === '' || !search === item.gameStatus || !item.email === search.toLowerCase()){
+                                        return (
+                                            <tr className={item.gameStatus === 'Win' ? 'green' : ''} key={item.email}>
+                                                <td>{index + 1}</td>
+                                                <td>{item.email}</td>
+                                                <td>{item.attempt}</td>
+                                                <td>{item.time}</td>
+                                                <td>{item.gameStatus}</td>
+                                            </tr>
+                                        )
+                                    }
                                 })
                             }
                         </tbody>

@@ -67,3 +67,14 @@ body{
     font-weight: 700;
     color: #04703a;
 }
+
+.word-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-right: 50px;
+}
+
+.search-button{
+    margin-left: 5px;
+}
