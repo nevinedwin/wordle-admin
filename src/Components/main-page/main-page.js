@@ -7,7 +7,7 @@ import { Button } from 'react-bootstrap'
 import { ToastContainer, toast } from 'react-toastify';
 import './main-page.css'
 import { allPlayerDetails, getWord, playerDetailsByDay, setWord } from '../../services/apiServices';
-import { decodeWord } from '../../utils/utils';
+import { compare, decodeWord } from '../../utils/utils';
 
 
 function MainPage() {
@@ -170,7 +170,7 @@ function MainPage() {
                         </thead>
                         <tbody>
                             {
-                                userDetails.length > 0 && userDetails.map((item, index) => {
+                                userDetails.length > 0 && userDetails.sort(compare).map((item, index) => {
                                     if (search === item.gameStatus) {
                                         return (
                                             <tr className={item.gameStatus === 'Win' ? 'green' : ''} key={item.email}>
@@ -182,7 +182,7 @@ function MainPage() {
                                             </tr>
                                         )
                                     }
-                                    else if(item.email === search.toLowerCase()){
+                                    else if (item.email === search.toLowerCase()) {
                                         return (
                                             <tr className={item.gameStatus === 'Win' ? 'green' : ''} key={item.email}>
                                                 <td>{index + 1}</td>
@@ -193,7 +193,7 @@ function MainPage() {
                                             </tr>
                                         )
                                     }
-                                    if(search === '' || !search === item.gameStatus || !item.email === search.toLowerCase()){
+                                    if (search === '' || !search === item.gameStatus || !item.email === search.toLowerCase()) {
                                         return (
                                             <tr className={item.gameStatus === 'Win' ? 'green' : ''} key={item.email}>
                                                 <td>{index + 1}</td>
